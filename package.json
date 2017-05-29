@@ -1,0 +1,23 @@
+{
+  "name": "ponkbot",
+  "version": "0.0.1",
+  "description": "A bot for CyTube",
+  "main": "service.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Xaekai/PonkBot.git"
+  },
+  "keywords": [
+    "cytube",
+    "bot"
+  ],
+  "author": "Xaekai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Xaekai/PonkBot/issues"
+  },
+  "homepage": "https://github.com/Xaekai/PonkBot#readme"
+}
