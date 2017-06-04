@@ -26,6 +26,7 @@
     "jstransformer-marked": "^1.0.2",
     "knex": "^0.13.0",
     "pug": "^2.0.0-rc.1",
+    "socket.io-client": "^2.0.2",
     "twitter": "^1.7.0"
   }
 }
