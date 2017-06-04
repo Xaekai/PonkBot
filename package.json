@@ -1,7 +1,7 @@
 {
   "name": "ponkbot",
-  "version": "0.0.1",
-  "description": "A bot for CyTube",
+  "version": "0.0.2",
+  "description": "A chatbot for CyTube",
   "main": "service.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,12 +21,12 @@
   },
   "homepage": "https://github.com/Xaekai/PonkBot#readme",
   "dependencies": {
-    "express": "^4.15.3",
-    "google-translate-api": "^2.2.2",
-    "jstransformer-marked": "^1.0.2",
-    "knex": "^0.13.0",
-    "pug": "^2.0.0-rc.1",
-    "socket.io-client": "^2.0.2",
-    "twitter": "^1.7.0"
+    "express":              "latest",
+    "google-translate-api": "latest",
+    "jstransformer-marked": "latest",
+    "knex":                 "latest",
+    "pug":                  "latest",
+    "socket.io-client":     "latest",
+    "twitter":              "latest"
   }
 }
