@@ -28,5 +28,10 @@
     "pug":                  "latest",
     "socket.io-client":     "latest",
     "twitter":              "latest"
+  },
+  "optionalDependencies": {
+    "mysql2":  "latest",
+    "sqlite3": "latest",
+    "pg":      "latest"
   }
 }
