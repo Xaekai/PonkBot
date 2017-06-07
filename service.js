@@ -9,22 +9,7 @@
 
 'use strict';
 
-const CyTubeClient = require('./lib/client.js');
+const PonkBot = require('./lib/ponkbot.js');
+const config = require('./config')
 
-class PonkBot {
-    constructor(config){
-        this.logger = {
-            log: function(){
-                console.log(`[PonkBot] ${Array.prototype.join.call(arguments, ' ')}`);
-            },
-            error: function(){
-                console.error(`[PonkBot] ${Array.prototype.join.call(arguments, ' ')}`);
-            },
-        }
-
-        this.logger.log('Contructing Bot');
-
-        this.client = new CyTubeClient();
-    }
-}
-
+var bot = new PonkBot(config);
