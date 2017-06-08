@@ -1,6 +1,6 @@
 {
   "name": "ponkbot",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A chatbot for CyTube",
   "main": "service.js",
   "scripts": {
@@ -12,7 +12,8 @@
   },
   "keywords": [
     "cytube",
-    "bot"
+    "bot",
+    "ponkbot"
   ],
   "author": "Xaekai",
   "license": "MIT",

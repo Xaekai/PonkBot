@@ -62,4 +62,4 @@ config.js
 
 # PonkBot development testing
 test-*.js
-test.db
+test-*.db
