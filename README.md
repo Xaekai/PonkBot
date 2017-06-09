@@ -11,6 +11,6 @@ Work in progress. Currently alpha state.
 * A scheduler system that integrates shows/movies
 
 ## Special Thanks
-- @calzoneman - For CyTube.
-- @nuclearace - For his port of Naoko to Node.js, which this bot is heavily inspired by.
-- @awused - For Naoko.
+- [calzoneman](https://github.com/calzoneman) - For [CyTube](https://cytu.be).
+- nuclearace - For his port of Naoko to Node.js, which this bot is inspired by.
+- awused - For Naoko.
