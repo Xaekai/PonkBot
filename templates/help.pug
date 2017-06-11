@@ -1,0 +1,29 @@
+doctype html
+html(lang='en')
+    include mixins
+
+    head
+        title #{bot.name} User Guide
+
+        meta( charset='utf-8' )
+        meta( name='viewport', content='width=device-width, initial-scale=1.0' )
+        meta( name='description', content=bot.name + ' User Guide' )
+
+        +favicon()
+        +bootstrap_css()
+        link( href='/css/ponkbot.css', rel='stylesheet' )
+
+        +jquery()
+        +bootstrap_js()
+        +socketio(serverIO)
+
+    body
+        #mainwrap(style='padding: 60px 15px 0;')
+            +pagenav('/help')
+
+            section
+                .container-fluid
+                    .row
+                        #mainpage.col-sm-12
+                            h3 User Guide
+                            p This is the future home of a self documenting chat command system

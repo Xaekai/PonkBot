@@ -1,0 +1,29 @@
+doctype html
+html(lang='en')
+    include mixins
+
+    head
+        title #{bot.name} Web Interface
+
+        meta( charset='utf-8' )
+        meta( name='viewport', content='width=device-width, initial-scale=1.0' )
+        meta( name='description', content=bot.name + ' Web Interface' )
+
+        +favicon()
+        +bootstrap_css()
+        link( href='/css/ponkbot.css', rel='stylesheet' )
+
+        +jquery()
+        +bootstrap_js()
+        +socketio(serverIO)
+
+    body
+        #mainwrap(style='padding: 60px 15px 0;')
+            +pagenav('/home')
+
+            section
+                .container-fluid
+                    .row
+                        #mainpage.col-sm-12
+                            h1 Welcome to #{bot.name} Web Interface
+                            p Not much to see yet.
