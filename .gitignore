@@ -60,7 +60,6 @@ typings/
 # PonkBot active config
 config.js
 
-# PonkBot development testing
-test-*.js
-test-*.db
-lib/dev-scraps-*.js
+# PonkBot development testing and scraps
+test-*
+dev-*

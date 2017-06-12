@@ -19,11 +19,30 @@ html(lang='en')
 
     body
         #mainwrap(style='padding: 60px 15px 0;')
-            +pagenav('/help')
+            +pagenav('/internals')
 
             section
                 .container-fluid
                     .row
                         #mainpage.col-sm-12
                             h3 #{bot.name} Internals
-                            p Coming Very Very Soon
+
+                    .row: br
+
+                    .row
+                        ul#infonav.nav.nav-tabs
+                            li.active: a( href='#coredata', data-toggle='tab' ) Core Data
+                            li:        a( href='#userlist', data-toggle='tab' ) Userlist
+                            li:        a( href='#playlist', data-toggle='tab' ) Playlist
+                            
+                    .row
+                        #infotabs.tab-content
+                            #coredata.tab-pane.fade.active.in
+                                span#coredata_stuff
+                            #userlist.tab-pane.fade
+                                span#userlist_stuff
+                            #playlist.tab-pane.fade
+                                span#playlist_stuff
+
+        script( type='text/javascript', src='/js/internals.js' )
+
