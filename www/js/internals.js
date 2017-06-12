@@ -19,19 +19,19 @@ function uptime(startTime) {
     m = `00${Math.floor(time / 60)}`;
     s = `00${time % 60}`;
 
-    return `${h.slice(-2)}h ${m.slice(-2)}m ${s.slice(-2)}s`
+    return `${h.slice(-2)}h ${m.slice(-2)}m ${s.slice(-2)}s`;
 }
 
 function formatMedia({ type, id, title, duration, currentTime, paused }){
-    return `${type}:${id} <br> ${title} -- ${duration} <br> ${currentTime}s | ${paused ? 'Paused' : 'Playing'}`
+    return `${type}:${id} <br> ${title} -- ${duration} <br> ${currentTime.toFixed(2)}s | ${paused ? 'Paused' : 'Playing'}`;
 }
 
 
 socket.on('connect', ()=>{
     console.log('Connection established.');
     tickerInternals = setInterval(()=>{ socket.emit('getInternals') }, 250);
-    tickerUserlist = setInterval(()=>{ socket.emit('getUserlist') }, 5000);
-    tickerPlaylist = setInterval(()=>{ socket.emit('getPlaylist') }, 5000);
+    tickerUserlist = setInterval(()=>{ socket.emit('getUserlist') }, 5000); socket.emit('getUserlist');
+    tickerPlaylist = setInterval(()=>{ socket.emit('getPlaylist') }, 5000); socket.emit('getPlaylist');
 });
 
 socket.on('disconnect', ()=>{
@@ -42,34 +42,135 @@ socket.on('disconnect', ()=>{
 });
 
 
-// Handle bot info
-socket.on('coreData', function(coreData) {
+/*
+    I could have put this in the template, 
+        but then it wouldn't be as easy to edit.
+*/
+// Build table for the core data
+socket.once('coreData', ()=>{
+    const table = $('<table>').addClass('table table-bordered table-hover').appendTo($('#coredata_content'));
+
+    const props = {
+        started   : 'Started',
+        uptime    : 'Uptime',
+        heapTotal : 'Memory heap total',
+        heapUsed  : 'Memory heap used',
+        host      : 'CyTube Server',
+        chan      : 'CyTube Room',
+        user      : 'CyTube User',
+        weblink   : 'Web Link',
+        webport   : 'Web Port',
+        sockport  : 'Socket Port',
+        leader    : 'Leader',
+        prevUID   : 'Previous UID',
+        currUID   : 'Current UID',
+        currMedia : 'Current Media',
+    }
+
+    Object.keys(props).forEach((key)=>{
+        const tr = $('<tr>').appendTo(table);
+        $('<th>').text(`${props[key]}:`).appendTo(tr);
+        $('<td>').attr('id', `coredata_${key}`).appendTo(tr);
+    });
+
+});
+
+// Handle the core data
+socket.on('coreData', (coreData)=>{
     const { host, chan, user, 
             sockport, weblink, webport, 
             prevUID, currUID, currMedia, 
             leader, heapTotal, heapUsed, started 
         } = coreData;
 
-    let stuffString = ''
-    stuffString += `Started:           ${String(new Date(started)).split(/\s/).splice(1,4).join(' ')} (${started}) <br>`
-    stuffString += `Uptime:            ${uptime(started)} <br>`
-    stuffString += '<br>'
-    stuffString += `Memory heap total: ${heapTotal} <br>`
-    stuffString += `Memory heap used:  ${heapUsed} <br>`
-    stuffString += '<br>'
-    stuffString += `CyTube Server:     ${host} <br>`
-    stuffString += `CyTube Room:       ${chan} <br>`
-    stuffString += `CyTube User:       ${user} <br>`
-    stuffString += '<br>'
-    stuffString += `Web Link:          ${weblink} <br>`
-    stuffString += `Web Port:          ${webport} <br>`
-    stuffString += `Socket Port:       ${sockport} <br>`
-    stuffString += '<br>'
-    stuffString += `Leader:            ${leader} <br>`
-    stuffString += `Previous UID:      ${prevUID} <br>`
-    stuffString += `Current UID:       ${currUID} <br>`
-    stuffString += `Current Media:     ${formatMedia(currMedia)} <br>`
+    $('#coredata_started')   .text(`${String(new Date(started)).split(/\s/).splice(1,4).join(' ')} (${started})`);
+    $('#coredata_uptime')    .text(`${uptime(started)}`);
+    $('#coredata_heapTotal') .text(`${heapTotal}`);
+    $('#coredata_heapUsed')  .text(`${heapUsed}`);
+    $('#coredata_host')      .text(`${host}`);
+    $('#coredata_chan')      .text(`${chan}`);
+    $('#coredata_user')      .text(`${user}`);
+    $('#coredata_weblink')   .text(`${weblink}`);
+    $('#coredata_webport')   .text(`${webport}`);
+    $('#coredata_sockport')  .text(`${sockport}`);
+    $('#coredata_leader')    .text(`${leader}`);
+    $('#coredata_prevUID')   .text(`${prevUID}`);
+    $('#coredata_currUID')   .text(`${currUID}`);
+    $('#coredata_currMedia') .html(`${formatMedia(currMedia)}`);
 
-    $('#coredata_stuff').html(stuffString);
-})
+});
 
+
+// Build table for userlist
+socket.once('userlist', ()=>{
+    const table = $('<table>').addClass('table table-condensed table-bordered table-hover').appendTo($('#userlist_content'));
+    const thead = $('<thead>').appendTo(table);
+    const theadr = $('<tr>').appendTo(thead);
+
+    $('<th>').text('Name').appendTo(theadr);
+    $('<th>').text('Rank').appendTo(theadr);
+    $('<th>').text('Profile Text').appendTo(theadr);
+    $('<th>').text('Profile Image').appendTo(theadr);
+    $('<th>').text('AFK').appendTo(theadr);
+    $('<th>').text('Muted').appendTo(theadr);
+
+    $('<tbody>').attr('id','userlist_body').appendTo(table);
+});
+
+
+// Handle the userlist
+socket.on('userlist', function(userlist) {
+    userlist.sort((a,b)=>{
+        if(b.rank !== a.rank){
+            return b.rank-a.rank;
+        }
+        const c = a.name, d = b.name;
+        return c.localeCompare(d);
+    });
+
+    const tbody = $('#userlist_body').html('');
+    userlist.forEach(({ name, rank, profile, meta })=>{
+        const row = $('<tr>').appendTo(tbody);
+        $('<td>').appendTo(row).text(name);
+        $('<td>').appendTo(row).text(rank);
+        $('<td>').appendTo(row).text(profile.text);
+        $('<td>').appendTo(row).html(`<img style="max-height: 32px" src="${profile.image}">`);
+        $('<td>').appendTo(row).html(meta.afk ? '&#x2611;' : '&#x2610;');
+        $('<td>').appendTo(row).html(meta.muted ? '&#x2611;' : '&#x2610;');
+    });
+
+    $('#userlistspan').text('Number of users: ' + userlist.length);
+
+});
+
+
+// Build table for playlist
+socket.once('playlist', ()=>{
+    const table = $('<table>').addClass('table table-condensed table-bordered table-hover').appendTo($('#playlist_content'));
+    const thead = $('<thead>').appendTo(table);
+    const theadr = $('<tr>').appendTo(thead);
+
+    $('<th>').text('Media Code').appendTo(theadr);
+    $('<th>').text('Title').appendTo(theadr);
+    $('<th>').text('Duration').appendTo(theadr);
+    $('<th>').text('UID').appendTo(theadr);
+    $('<th>').text('Temp').appendTo(theadr);
+    $('<th>').text('Queuer').appendTo(theadr);
+
+    $('<tbody>').attr('id','playlist_body').appendTo(table);
+});
+
+// Handle the playlist
+socket.on('playlist', function(playlist) {
+    const tbody = $('#playlist_body').html('');
+
+    playlist.forEach(({ media, uid, temp, queueby })=>{
+        const row = $('<tr>').appendTo(tbody);
+        $('<td>').appendTo(row).text(`${media.type}:${media.id}`);
+        $('<td>').appendTo(row).text(media.title);
+        $('<td>').appendTo(row).text(media.duration);
+        $('<td>').appendTo(row).text(uid);
+        $('<td>').appendTo(row).html(temp ? '&#x2611;' : '&#x2610;');
+        $('<td>').appendTo(row).text(queueby);
+    });
+});
