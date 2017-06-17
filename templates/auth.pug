@@ -1,0 +1,61 @@
+doctype html
+html(lang="en")
+    include mixins
+
+    head
+        title #{bot.channel} Moderator Login
+
+        meta( charset='utf-8' )
+        meta( name='viewport', content='width=device-width, initial-scale=1.0' )
+        meta( name='description', content=`${bot.channel}: Moderator Login` )
+
+        +favicon()
+        +bootstrap_css()
+        link( href='/css/ponkbot.css', rel='stylesheet' )
+
+        +jquery()
+        +bootstrap_js()
+        +socketio(serverIO)
+
+    body
+        #mainwrap(style="padding: 60px 15px 0;")
+            +pagenav('/auth')
+
+
+            section
+                .container-fluid
+                    .row#mainpage
+                        .col-sm-12
+                            .row.text-center
+                                h1 Moderator Authentication
+
+                            if (loginMessage.length)
+                                .row
+                                    .col-xs-3
+                                    .col-xs-6.well
+                                        h3( style='color: red;' ) Error: #{loginMessage}
+
+                            .row: br
+
+                            .row
+                                .col-xs-3
+                                .col-xs-6.well
+                                    if (user)
+                                        h4 You are logged in as #{user.user}. You are user #{user.id}. You are rank #{user.rank}.
+                                    else
+                                        form( action='/login', method='POST' )#login.form-horizontal
+                                            fieldset
+                                                legend Login
+                                                .form-group
+                                                    label.col-lg-2.control-label(for='inputUsername') Username
+                                                    .col-lg-10
+                                                        input#inputUsername.form-control(type='text', placeholder='Username', name='username')
+                                                .form-group
+                                                    label.col-lg-2.control-label(for='inputAuthKey') Auth Key
+                                                    .col-lg-10
+                                                        input#inputAuthKey.form-control(type='password', placeholder='Auth Key', name='authkey')
+                                                .form-group
+                                                    .col-lg-10.col-lg-offset-2
+                                                        button.btn.btn-default(type='reset') Cancel
+                                                        | &nbsp; 
+                                                        button.btn.btn-primary( type='submit' ) Submit

@@ -8,7 +8,6 @@
 const socket = io(PONKSOCKET);
 var tickerInternals, tickerUserlist, tickerPlaylist;
 
-
 function uptime(startTime) {
     const now = Date.now();
     let time = parseInt(((now - startTime) / 1000), 10);
@@ -102,24 +101,31 @@ socket.on('coreData', (coreData)=>{
 
 
 // Build table for userlist
-socket.once('userlist', ()=>{
+socket.once('userlist', (data, moderator)=>{
     const table = $('<table>').addClass('table table-condensed table-bordered table-hover').appendTo($('#userlist_content'));
     const thead = $('<thead>').appendTo(table);
     const theadr = $('<tr>').appendTo(thead);
 
     $('<th>').text('Name').appendTo(theadr);
     $('<th>').text('Rank').appendTo(theadr);
-    $('<th>').text('Profile Text').appendTo(theadr);
-    $('<th>').text('Profile Image').appendTo(theadr);
     $('<th>').text('AFK').appendTo(theadr);
     $('<th>').text('Muted').appendTo(theadr);
+    if(moderator){
+        $('<th>').text('Shadow').appendTo(theadr);
+    }
+    $('<th>').text('Profile Image').appendTo(theadr);
+    $('<th>').text('Profile Text').appendTo(theadr);
+    if(moderator){
+        $('<th>').text('IP').appendTo(theadr);
+        $('<th>').text('Aliases').appendTo(theadr);
+    }
 
     $('<tbody>').attr('id','userlist_body').appendTo(table);
 });
 
 
 // Handle the userlist
-socket.on('userlist', function(userlist) {
+socket.on('userlist', function(userlist, moderator) {
     userlist.sort((a,b)=>{
         if(b.rank !== a.rank){
             return b.rank-a.rank;
@@ -133,10 +139,17 @@ socket.on('userlist', function(userlist) {
         const row = $('<tr>').appendTo(tbody);
         $('<td>').appendTo(row).text(name);
         $('<td>').appendTo(row).text(rank);
-        $('<td>').appendTo(row).text(profile.text);
-        $('<td>').appendTo(row).html(`<img style="max-height: 32px" src="${profile.image}">`);
         $('<td>').appendTo(row).html(meta.afk ? '&#x2611;' : '&#x2610;');
         $('<td>').appendTo(row).html(meta.muted ? '&#x2611;' : '&#x2610;');
+        if(moderator){
+            $('<td>').appendTo(row).html(meta.smuted ? '&#x2611;' : '&#x2610;');
+        }
+        $('<td>').appendTo(row).html(`<img style="max-height: 32px" src="${profile.image}">`);
+        $('<td>').appendTo(row).text(profile.text);
+        if(moderator){
+            $('<td>').appendTo(row).text(meta.ip);
+            $('<td>').appendTo(row).text(meta.aliases);
+        }
     });
 
     $('#userlistspan').text('Number of users: ' + userlist.length);

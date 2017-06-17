@@ -1,6 +1,6 @@
 {
   "name": "ponkbot",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A chatbot for CyTube",
   "main": "service.js",
   "scripts": {
@@ -23,14 +23,18 @@
   "homepage": "https://github.com/Xaekai/PonkBot#readme",
   "dependencies": {
     "body-parser":          "latest",
+    "bcrypt-nodejs":        "latest",
     "chalk":                "chalk/chalk#256-truecolor",
     "connect-flash":        "latest",
+    "connect-session-knex": "latest",
     "cookie-parser":        "latest",
     "express":              "latest",
     "express-session":      "latest",
     "google-translate-api": "latest",
     "jstransformer-marked": "latest",
     "knex":                 "latest",
+    "passport":             "latest",
+    "passport-local":       "latest",
     "pug":                  "latest",
     "socket.io":            "latest",
     "socket.io-client":     "latest",
