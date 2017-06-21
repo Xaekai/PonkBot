@@ -29,8 +29,8 @@ function formatMedia({ type, id, title, duration, currentTime, paused }){
 socket.on('connect', ()=>{
     console.log('Connection established.');
     tickerInternals = setInterval(()=>{ socket.emit('getInternals') }, 250);
-    tickerUserlist = setInterval(()=>{ socket.emit('getUserlist') }, 5000); socket.emit('getUserlist');
-    tickerPlaylist = setInterval(()=>{ socket.emit('getPlaylist') }, 5000); socket.emit('getPlaylist');
+    tickerUserlist  = setInterval(()=>{ socket.emit('getUserlist') }, 60000); socket.emit('getUserlist');
+    tickerPlaylist  = setInterval(()=>{ socket.emit('getPlaylist') }, 60000); socket.emit('getPlaylist');
 });
 
 socket.on('disconnect', ()=>{
