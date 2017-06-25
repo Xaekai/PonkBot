@@ -17,20 +17,20 @@ class WeatherUnderground {
         });
     }
 
+    get requestOpts(){
+        return {
+            pool    : this.pool,
+            timeout : this.timeout,
+            headers : { 'User-Agent': this.agent }
+        }
+    }
+
     getWeather(data) {
         return this.weatherMare(data, false);
     }
 
     getForecast(data) {
         return this.weatherMare(data, true);
-    }
-
-    get requestOpts(){
-        return {
-            pool    : this.pool,
-            agent   : this.agent,
-            timeout : this.timeout,
-        }
     }
 
     weatherMare(data, isForecast) {
