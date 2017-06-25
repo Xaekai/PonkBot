@@ -1,5 +1,5 @@
 # PonkBot
-Work in progress. Currently alpha state.
+Work in progress. Currently beta state.
 
 ## Intended Goals
 * Feature parity with [CytubeBot](https://github.com/nuclearace/CytubeBot)
@@ -9,6 +9,18 @@ Work in progress. Currently alpha state.
 * A show system
 * A movie system
 * A scheduler system that integrates shows/movies
+
+## Intended API support
+* YouTube
+* OMDB
+* Merriam-Webster
+* Wolfram
+* Cleverbot
+* Twitter
+* [Weather Underground](https://www.wunderground.com/weather/api)
+* Giphy
+* Derpibooru
+* e621
 
 ## Special Thanks
 - [calzoneman](https://github.com/calzoneman) - For [CyTube](https://cytu.be).

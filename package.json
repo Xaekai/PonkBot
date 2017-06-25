@@ -24,7 +24,7 @@
   "dependencies": {
     "body-parser":          "latest",
     "bcrypt-nodejs":        "latest",
-    "chalk":                "latest",
+    "chalk":                "https://github.com/chalk/chalk.git",
     "connect-flash":        "latest",
     "connect-session-knex": "latest",
     "cookie-parser":        "latest",
@@ -33,9 +33,11 @@
     "google-translate-api": "latest",
     "jstransformer-marked": "latest",
     "knex":                 "latest",
+    "limiter":              "latest",
     "passport":             "latest",
     "passport-local":       "latest",
     "pug":                  "latest",
+    "request":              "latest",
     "socket.io":            "latest",
     "socket.io-client":     "latest",
     "twitter":              "latest"

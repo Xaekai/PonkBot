@@ -63,3 +63,7 @@ config.js
 # PonkBot development testing and scraps
 test-*
 dev-*
+
+# PonkBot extensions
+/balloons
+
