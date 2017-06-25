@@ -10,9 +10,10 @@ const request = require('request');
 class WeatherUnderground {
     constructor(ponk){
         Object.assign(this, {
-            key  : ponk.API.keys.wunderground, 
-            pool : new require('https').Agent({ maxSockets: 2 })
-            // TODO: Global Bot Agent String
+            key     : ponk.API.keys.wunderground, 
+            agent   : ponk.API.agent,
+            pool    : new require('https').Agent({ maxSockets: 2 }),
+            timeout : 15 * 1000
         });
     }
 
@@ -24,13 +25,21 @@ class WeatherUnderground {
         return this.weatherMare(data, true);
     }
 
+    get requestOpts(){
+        return {
+            pool    : this.pool,
+            agent   : this.agent,
+            timeout : this.timeout,
+        }
+    }
+
     weatherMare(data, isForecast) {
         return new Promise((resolve, reject)=>{
             let url;
 
             if (data.split(' ').length === 1) {
                 url = `https://api.wunderground.com/api/${this.key}/conditions${isForecast ? '/forecast' : ''}/q/${data}.json`;
-                request({ url, pool: this.pool, timeout: this.timeout }, (error, response, body) => {
+                request(Object.assign({ url }, this.requestOpts), (error, response, body) => {
                     if(error){
                         reject(error);
                     } else {
@@ -43,7 +52,7 @@ class WeatherUnderground {
                     const query = this.parseLocation(data);
                     url = `https://api.wunderground.com/api/${this.key}/conditions${isForecast ? '/forecast' : ''}/q/${query}.json`;
 
-                    request({ url, pool: this.pool, timeout: this.timeout }, (error, response, body) => {
+                    request(Object.assign({ url }, this.requestOpts), (error, response, body) => {
                         if(error){
                             reject(error);
                         } else {
