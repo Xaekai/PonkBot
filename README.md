@@ -1,7 +1,7 @@
 # PonkBot
 Work in progress. Currently beta state.
 
-## Intended Goals
+### Intended Goals
 * Feature parity with [CytubeBot](https://github.com/nuclearace/CytubeBot)
 * Compatibility with SQLite, MySQL, and Postgres
 * A self-documenting chat command system
@@ -10,11 +10,11 @@ Work in progress. Currently beta state.
 * A movie system
 * A scheduler system that integrates shows/movies
 
-## Intended API support
+### Intended API support
 * YouTube
 * OMDB
 * Merriam-Webster
-* Wolfram
+* [WolframAlpha](https://products.wolframalpha.com/api/faqs.html)
 * Cleverbot
 * Twitter
 * [Weather Underground](https://www.wunderground.com/weather/api)
@@ -22,7 +22,7 @@ Work in progress. Currently beta state.
 * Derpibooru
 * e621
 
-## Special Thanks
+### Special Thanks
 - [calzoneman](https://github.com/calzoneman) - For [CyTube](https://cytu.be).
 - nuclearace - For his port of Naoko to Node.js, which this bot is inspired by.
 - awused - For Naoko.

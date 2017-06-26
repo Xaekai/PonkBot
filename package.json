@@ -1,6 +1,6 @@
 {
   "name": "ponkbot",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "A chatbot for CyTube",
   "main": "service.js",
   "scripts": {
@@ -24,13 +24,13 @@
   "dependencies": {
     "body-parser":          "latest",
     "bcrypt-nodejs":        "latest",
-    "chalk":                "https://github.com/chalk/chalk.git",
+    "chalk":                "chalk/chalk",
     "connect-flash":        "latest",
     "connect-session-knex": "latest",
     "cookie-parser":        "latest",
     "express":              "latest",
     "express-session":      "latest",
-    "google-translate-api": "latest",
+    "google-translate-api": "arthurlacoste/google-translate-api",
     "jstransformer-marked": "latest",
     "knex":                 "latest",
     "limiter":              "latest",
