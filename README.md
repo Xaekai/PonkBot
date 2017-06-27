@@ -15,7 +15,7 @@ Work in progress. Currently beta state.
 * OMDB
 * Merriam-Webster
 * [WolframAlpha](https://products.wolframalpha.com/api/faqs.html)
-* Cleverbot
+* [Cleverbot](https://www.cleverbot.com/api/)
 * Twitter
 * [Weather Underground](https://www.wunderground.com/weather/api)
 * Giphy
