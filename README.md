@@ -13,10 +13,10 @@ Work in progress. Currently beta state.
 ### Intended API support
 * YouTube
 * OMDB
-* Merriam-Webster
+* Twitter
+* [Merriam-Webster](https://dictionaryapi.com/)
 * [WolframAlpha](https://products.wolframalpha.com/api/faqs.html)
 * [Cleverbot](https://www.cleverbot.com/api/)
-* Twitter
 * [Weather Underground](https://www.wunderground.com/weather/api)
 * Giphy
 * Derpibooru
