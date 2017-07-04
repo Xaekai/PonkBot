@@ -1,0 +1,28 @@
+doctype html
+html(lang='en')
+    include mixins
+
+    head
+        title #{bot.name} Logs
+
+        meta( charset='utf-8' )
+        meta( name='viewport', content='width=device-width, initial-scale=1.0' )
+        meta( name='description', content=bot.name + ': Channel Logs Viewer' )
+
+        +favicon()
+        +bootstrap_css()
+        link( href='/css/ponkbot.css', rel='stylesheet' )
+
+        +jquery()
+        +bootstrap_js()
+        +socketio(serverIO)
+
+    body
+        #mainwrap(style='padding: 60px 15px 0;')
+            +pagenav('/logs', logs)
+
+            #logviewer
+
+        script( type='text/javascript' ).
+            const LOGIDS = !{JSON.stringify(Object.keys(logs))}
+        script( type='text/javascript', src='/js/logs.js' )

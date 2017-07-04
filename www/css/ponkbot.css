@@ -1,0 +1,37 @@
+/*|
+**|   PonkBot Web Interface CSS
+**@
+*/
+
+.navbar-right {
+	margin-right: initial;
+}
+
+.lognav button {
+	background-color: black;
+	color: white;
+}
+
+.lognav li {
+  padding-left: 4px;
+}
+
+#mainwrap, body {
+	background-color: black !important;
+}
+
+#logviewer > pre {
+	background-color: black;
+	color: #E8E8E8;
+}
+
+code {
+  background: #222;
+  padding: 1px 3px;
+  color: #eee;
+  border-left:  2px solid #804;
+  border-right: 2px solid #804;
+  border-top: 1px;
+  border-bottom: 1px;
+  border-radius: 2px;
+}

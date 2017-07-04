@@ -1,6 +1,6 @@
 {
   "name": "ponkbot",
-  "version": "0.4.7",
+  "version": "0.5.0",
   "description": "A chatbot for CyTube",
   "main": "service.js",
   "scripts": {
