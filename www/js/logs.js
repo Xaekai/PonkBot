@@ -27,16 +27,32 @@ function handleMediaLog(data) {
     if(mediaTable.length){
         createMediaTable(mediaTable);
     } else {
-        $('#logviewer').text('No History')
+        $('#logviewer').text('No Media History');
     }
-    $('#logviewer').scrollTop($('#logviewer').prop('scrollHeight'))
+    $('#logviewer').scrollTop($('#logviewer').prop('scrollHeight'));
+}
+
+function handleChatLog(data) {
+    const chatEntries = [];
+    data.split('\n').forEach(item =>{
+        if(item.length && item.match(/^{/)){
+            chatEntries.push(JSON.parse(item));
+        }
+    });
+
+    if(chatEntries.length){
+        createChatLog(chatEntries);
+    } else {
+        $('#logviewer').text('No Chat History');
+    }
+    $('#logviewer').scrollTop($('#logviewer').prop('scrollHeight'));
 }
 
 
 function createMediaTable(mediaTable){
     $('#logviewer').text('').empty();
 
-    var table = $('<table>').addClass('table table-striped table-condensed').appendTo($('#logviewer'));
+    var table = $('<table>').attr('id','medialog').addClass('table table-striped table-condensed').appendTo($('#logviewer'));
     var thead = $('<thead>').appendTo(table);
     var theadr = $('<tr>').appendTo(thead);
 
@@ -49,8 +65,10 @@ function createMediaTable(mediaTable){
         var truncate = 80
         var trow = $('<tr/>').appendTo(tbody);
 
+        const now = (new Date(parseInt(cv.time))).toISOString();
+
         var timestamp = $('<code/>')
-            .text(new Date(parseInt(cv.time)))
+            .text(`${now.slice(0,10)} ${now.slice(11,19)}`)
             .addClass('linewrap')
             .appendTo($('<td/>')
             .appendTo(trow))
@@ -76,9 +94,52 @@ function createMediaTable(mediaTable){
             title.attr('title',cv.title)
         }
 
-    })
-
+    });
 }
+
+
+function createChatLog(chatEntries){
+    $('#logviewer').text('').empty();
+
+    var table = $('<table>').attr('id','chatlog').addClass('table table-condensed').appendTo($('#logviewer'));
+
+    var thead = $('<thead>').appendTo(table);
+    var theadr = $('<tr>').appendTo(thead);
+    $('<th>').text('Timestamp').appendTo(theadr);
+    $('<th>').text('User').appendTo(theadr);
+    $('<th>').text('Message').appendTo(theadr);
+
+    var tbody = $('<tbody>').appendTo(table);
+
+    const truncate = 80;
+    chatEntries.forEach(cv =>{
+        var trow = $('<tr/>').appendTo(tbody);
+
+        const now = (new Date(parseInt(cv.time))).toISOString();
+
+        var timestamp = $('<code/>')
+            .text(`${now.slice(0,10)} ${now.slice(11,19)}`.replace(/\s/g, '\u00A0'))
+            .attr('style', 'white-space: nowrap;')
+            .appendTo($('<td/>')
+            .appendTo(trow))
+            ;
+
+        var user = $('<code/>')
+            .text(cv.user)
+            .appendTo($('<td/>')
+            .appendTo(trow))
+            ;
+
+        var message = $('<div/>')
+            .html(cv.message)
+            .addClass('chatMessage')
+            .appendTo($('<td/>')
+            .appendTo(trow))
+            ;
+
+    });
+}
+
 
 function setHighlight(target){
     $('ul.lognav button').removeClass('active btn-primary');
@@ -87,12 +148,15 @@ function setHighlight(target){
 
 $(document).ready(function() {
     LOGIDS.forEach(logid => {
-        if(logid === 'medialog'){ return }
+        if(/chat|media/.test(logid)){ return }
         $(`#${logid}`).on('click', function(){
             setHighlight(this);
             readLogFile(logid, handleLogData);
         });
     })
-    $('#medialog').on('click',  function(){ setHighlight(this); readLogFile('medialog', handleMediaLog); });
+    $('#media').on('click', function(){ setHighlight(this); readLogFile('media', handleMediaLog); });
+    $('#chat').on('click', function(){ setHighlight(this); readLogFile('chat', handleChatLog); });
+
+    $('#bot').click();
 })
 

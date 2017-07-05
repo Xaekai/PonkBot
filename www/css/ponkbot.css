@@ -29,9 +29,15 @@ code {
   background: #222;
   padding: 1px 3px;
   color: #eee;
-  border-left:  2px solid #804;
-  border-right: 2px solid #804;
+  border-left:  2px solid rgba(0,0,0,0.5);
+  border-right: 2px solid rgba(0,0,0,0.5);
   border-top: 1px;
   border-bottom: 1px;
   border-radius: 2px;
 }
+
+#chatlog img {
+  max-height: 128px
+}
+
+.chatMessage code { white-space: pre-wrap; }
