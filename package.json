@@ -1,6 +1,6 @@
 {
   "name": "ponkbot",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "A chatbot for CyTube",
   "main": "service.js",
   "scripts": {
@@ -25,6 +25,7 @@
     "body-parser":          "latest",
     "bcrypt-nodejs":        "latest",
     "chalk":                "chalk/chalk",
+    "compression":          "latest",
     "connect-flash":        "latest",
     "connect-session-knex": "latest",
     "cookie-parser":        "latest",
