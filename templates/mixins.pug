@@ -16,8 +16,8 @@ mixin gennavbar(cpage)
 
 mixin genright(rlinks)
   ul.nav.navbar-nav.navbar-right.lognav
-    each data, id in rlinks
-      li: button.navbar-btn.btn.btn-default( id=id ) #{data.label}
+    each label, id in rlinks
+      li: button.navbar-btn.btn.btn-default( id=id ) #{label}
 
 mixin pagenav(cpage, rightnav)
   nav.navbar.navbar-inverse.navbar-fixed-top(role="navigation")
