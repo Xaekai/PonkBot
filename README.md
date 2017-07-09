@@ -1,8 +1,10 @@
 # PonkBot
+An advanced bot for CyTube with so much rice I should have called it Uncle Bens.
+
 Work in progress. Currently beta state.
 
 ### Intended Goals
-* Feature parity with [CytubeBot](https://github.com/nuclearace/CytubeBot)
+* To be the premiere bot for Cytube.
 * Compatibility with SQLite, MySQL, and Postgres
 * A self-documenting chat command system
 * A self-hosted web interface with moderator auth and tools
@@ -24,5 +26,5 @@ Work in progress. Currently beta state.
 
 ### Special Thanks
 - [calzoneman](https://github.com/calzoneman) - For [CyTube](https://cytu.be).
-- nuclearace - For his port of Naoko to Node.js, which this bot is inspired by.
-- awused - For Naoko.
+- nuclearace - For [his port](https://github.com/nuclearace/CytubeBot) of Naoko to Node.js.
+- awused - For [Naoko](https://github.com/awused/cyNaoko).
