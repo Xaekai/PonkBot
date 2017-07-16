@@ -13,7 +13,7 @@ Work in progress. Currently beta state.
 * A scheduler system that integrates shows/movies
 
 ### Intended API support
-* YouTube
+* [YouTube](https://developers.google.com/youtube/registering_an_application)
 * OMDB
 * Twitter
 * [Merriam-Webster](https://dictionaryapi.com/)

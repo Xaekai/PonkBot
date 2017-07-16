@@ -9,6 +9,7 @@ module.exports = {
     ponk: {
         useflair : true,
         peers    : ['OtherBot'],
+        audience : ['us'],
     },
     commands: {
         disabled  : ['vodka','taco'],
@@ -17,11 +18,11 @@ module.exports = {
     },
     sync: {
         host : 'cytu.be',
-        port : '443',
+        port : '443', secure: true,
         user : 'MyNewBot',
         auth : 'MyNewBotsPassword',
         chan : 'MyAwesomeCyTubeChannel',
-        pass : 'DeleteThisIfYouChannelHasNoPassword',
+        pass : 'DeleteThisLineIfYouChannelHasNoPassword',
     },
     db: {
         client     : 'sqlite3',
