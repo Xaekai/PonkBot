@@ -1,0 +1,62 @@
+doctype html
+html(lang="en")
+    include mixins
+
+    head
+        title #{bot.channel} Statistics
+
+        meta( charset='utf-8' )
+        meta( name='viewport', content='width=device-width, initial-scale=1.0' )
+        meta( name='description', content=`${bot.channel}: Statistics` )
+
+        +favicon()
+        +bootstrap_css()
+        link( href='/css/ponkbot.css', rel='stylesheet' )
+        link( href='/css/stats.css', rel='stylesheet' )
+
+        +jquery()
+        +bootstrap_js()
+        script( type='text/javascript', src='//www.google.com/jsapi' )
+        +socketio(serverIO)
+
+    body
+        #mainwrap(style="padding: 60px 15px 0;")
+            +pagenav('/stats')
+
+            section
+                .container-fluid
+                    .row
+                        #mainpage.col-sm-12
+                            table.main
+                                tr
+                                    td
+                                        h4
+                                            | Videos by User
+                                    td.popular_video_td
+                                        h4
+                                            | Popular Videos
+                                    td
+                                        h4
+                                            | Chat by User
+                                tr
+                                    td
+                                        #user_video_div
+                                    td.popular_video_td
+                                        #popular_video_div
+                                            table#popular_video_table
+                                                thead
+                                                    tr
+                                                        td Videos
+                                                        td Frequency
+                                                tbody
+                                    td
+                                        #user_chat_div
+                                tr
+                                    td(colspan='3')
+                                        h4
+                                            | Users Connected
+                                    tr
+                                        td(colspan='3')
+                                            #average_user_div
+
+        script( type='text/javascript', src='/js/stats.js' )
