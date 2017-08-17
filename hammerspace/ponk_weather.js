@@ -10,7 +10,7 @@ const request = require('request');
 class WeatherUnderground {
     constructor(ponk){
         Object.assign(this, {
-            key     : ponk.API.keys.wunderground, 
+            key     : ponk.API.keys.wunderground,
             agent   : ponk.API.agent,
             pool    : new require('https').Agent({ maxSockets: 2 }),
             timeout : 15 * 1000
