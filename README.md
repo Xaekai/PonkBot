@@ -1,4 +1,4 @@
-![](https://user-images.githubusercontent.com/594255/28581884-680b6ce4-7118-11e7-9360-d9953336175b.png)
+![](https://user-images.githubusercontent.com/594255/29431213-05ca66e8-834c-11e7-8d23-c95c3e56f4d5.png)
 
 # PonkBot
 An advanced bot for CyTube with so much rice I should have called it Uncle Bens.
