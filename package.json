@@ -4,7 +4,7 @@
   "description": "A chatbot for CyTube",
   "main": "service.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "test": "echo \"Notice: Tests coming soon.\" && exit 0"
   },
   "repository": {
     "type": "git",
@@ -44,9 +44,12 @@
     "twitter":              "latest"
   },
   "optionalDependencies": {
+    "agenda":    "latest",
+    "cheerio":   "latest",
     "cleverbot": "latest",
     "mysql2":    "latest",
     "sqlite3":   "latest",
-    "pg":        "latest"
+    "pg":        "latest",
+    "xml2js":    "latest"
   }
 }
