@@ -31,7 +31,7 @@
     "cookie-parser":        "latest",
     "express":              "latest",
     "express-session":      "latest",
-    "google-translate-api": "arthurlacoste/google-translate-api",
+    "google-translate-api": "latest",
     "jstransformer-marked": "latest",
     "knex":                 "latest",
     "limiter":              "latest",
@@ -48,8 +48,8 @@
     "cheerio":   "latest",
     "cleverbot": "latest",
     "mysql2":    "latest",
-    "sqlite3":   "latest",
     "pg":        "latest",
+    "sqlite3":   "latest",
     "xml2js":    "latest"
   }
 }
