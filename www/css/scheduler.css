@@ -1,0 +1,19 @@
+/*|
+**|   PonkBot Web Interface Scheduling CSS
+**@
+*/
+
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);
+
+pre {
+  font-family: 'Droid Sans Mono', 'Anonymous Pro', Consolas, Menlo, Monaco, 'Lucida Console', 'Liberation Mono', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New', monospace, serif;
+  }
+
+#queryInfo{
+  padding-left: 15px;
+}
+
+.glyphicon{
+  padding-left: 5px;
+  padding-right: 5px;
+}

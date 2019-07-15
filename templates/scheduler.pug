@@ -1,0 +1,31 @@
+doctype html
+html(lang='en')
+    include mixins
+
+    head
+        title #{bot.channel} Scheduling
+
+        meta( charset='utf-8' )
+        meta( name='viewport', content='width=device-width, initial-scale=1.0' )
+        meta( name='description', content=`${bot.channel}: Scheduling` )
+
+        +favicon()
+        +bootstrap_css()
+        link( href='/css/ponkbot.css', rel='stylesheet' )
+        link( href='/css/scheduler.css', rel='stylesheet' )
+
+        +jquery()
+        +bootstrap_js()
+        +socketio(serverIO)
+
+    body
+        #mainwrap(style="padding: 60px 15px 0;")
+            +pagenav('/scheduler')
+
+            section
+                .container-fluid
+                    .row
+                        #mainpage.col-sm-12
+                            span#result Loading Scheduler Service Data
+
+        script( type='text/javascript', src='/js/scheduler.js' )
