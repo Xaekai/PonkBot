@@ -67,3 +67,5 @@ dev-*
 # PonkBot extensions
 /balloons
 
+# Fuck package lock
+package-lock.json
