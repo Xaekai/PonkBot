@@ -64,6 +64,10 @@ config.js
 test-*
 dev-*
 
+# PonkBot production deployment files
+prod-*
+prod/
+
 # PonkBot extensions
 /balloons
 
