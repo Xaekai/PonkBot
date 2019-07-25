@@ -10,6 +10,9 @@
 'use strict';
 
 const PonkBot = require('./lib/ponkbot.js');
-const config = require('./config')
 
-var bot = new PonkBot(config);
+const argv = require('minimist')(process.argv.slice(2));
+const configfile = typeof argv.config == "String" ? argv.config : "./config";
+
+const config = require(configfile);
+const bot = new PonkBot(config);
