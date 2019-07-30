@@ -45,20 +45,25 @@ class Derpibooru {
         return new Promise((resolve, reject)=>{
             const url = `https://derpibooru.org/${imageID}.json?key=${this.key}`
             request(Object.assign({ url }, this.requestOpts), (error, response, body) => {
-                if(error || response.statusCode !== 200){
-                    return reject(error || response.statusCode === 400 ? 'Bad Request' : 'Unknown');
-                } else {
-                    let result = JSON.parse(body);
-
-                    // TODO: recurse on `duplicate_of`
-
-                    // { "status":"500", "error":"Internal Server Error" }
-                    if(result["error"]){
-                        return reject(result["error"]);
-                    }
-
-                    return resolve(result);
+                if(error){
+                    return reject(error);
                 }
+                if(response.statusCode !== 200){
+                    return reject(response.statusCode === 400 ? 'Bad Request' : 'Unknown');
+                }
+
+                let result = JSON.parse(body);
+
+                // { "status":"500", "error":"Internal Server Error" }
+                if(result["error"]){
+                    return reject(result["error"]);
+                }
+
+                if(result.duplicate_of){
+                    return resolve(this.getImageDataByID(result.duplicate_of));
+                }
+
+                return resolve(result);
             });
         });
     }
