@@ -26,13 +26,16 @@ class Derpibooru {
             useSmall    : true,
             commandLock : false,
 
-            pendingExclusions : { 'favorites': [], 'topscoring': [] },
-            pendingInclusions : { 'favorites': [], 'topscoring': [] },
-            cachedStaging     : { 'favorites': [], 'topscoring': [] },
-            cachedReStaging   : { 'favorites': [], 'topscoring': [] },
-            favesData         : { 'user': {} },
-            searchCache       : [],
-            recentlySeen      : [],
+            favesData    : { 'user': {} },
+            searchCache  : [],
+            recentlySeen : [],
+
+            topscoring : {
+                cache     : [],
+                days      : 3,
+                timeout   : 15 * 60 * 1000,
+                timestamp : 0,
+            },
         });
     }
 
@@ -100,7 +103,7 @@ class Derpibooru {
                 return reject('Empty search query');
             }
 
-            // first lets get how many results this is gonna get
+            // Let us determine how many results this is going to get.
             const queryTotal = `https://${this.domain}/search.json?key=${this.key}&q=${query}&perpage=1`
             this.getRequest(queryTotal).then((result)=>{
                 const results = result.total;
@@ -112,7 +115,6 @@ class Derpibooru {
                 let pages = Math.min(this.maxPages, totalPages);
 
                 const queries = [];
-
                 while(pages--){
                     const page = pages+1;
                     const url = `https://${this.domain}/search.json?key=${this.key}&q=${query}&sf=score&sd=desc&page=${page}&perpage=50`
@@ -129,6 +131,22 @@ class Derpibooru {
         });
     }
 
+    getTopscoring(){
+        return new Promise((resolve, reject)=>{
+            if(Date.now() - this.topscoring.timestamp < this.topscoring.timeout){
+                return resolve(this.topscoring.cache);
+            }
+
+            const query = `first_seen_at.gte:${this.topscoring.days} days ago`
+            this.search(query).then((results)=>{
+                this.topscoring.cache = results;
+                return resolve(this.topscoring.cache);
+            },(error)=>{
+                return reject(error);
+            });
+            this.topscoring.timestamp = Date.now();
+        });
+    }
 
     /*
         Command handlers are called in the context of the bot, not the class
@@ -161,6 +179,7 @@ class Derpibooru {
             this.sendPrivate(message, user);
         });
     }
+
 
     handleDerpi(user, params, meta){
         if (this.muted || !this.API.derpibooru || !params){
@@ -203,6 +222,44 @@ class Derpibooru {
             this.sendPrivate(message, user);
         });
     }
+
+
+    handleTopscoring(user, params, meta){
+        if (this.muted || !this.API.derpibooru){
+            return
+        }
+
+        this.checkCooldown({
+            type: 'derpibooru', user, modBypass: this.getUserRank(user) > 2
+        }).then(()=>{
+            const postAPI = (resultSet)=>{
+                // Remove recently seen
+                let filteredSet = resultSet.filter(imageData => {
+                    return !this.API.derpibooru.recent.includes(imageData.id);
+                });
+                // Entire search has been recently seen
+                if(!filteredSet.length){
+                    filteredSet = resultSet;
+                }
+
+                // Select random image
+                const imageData = filteredSet[Math.floor(Math.random() * filteredSet.length)];
+                // Recently seen now
+                this.API.derpibooru.seen(imageData.id);
+                // Display it
+                this.sendMessage(`[Derpibooru] { Results: ${resultSet.length} }\n https://${imageData.representations.small}${this.API.derpibooru.embed}`);
+            };
+
+            const handleError = (err)=>{
+                this.sendMessage(`[Derpibooru] Something went wrong. ${err}`);
+            }
+
+            this.API.derpibooru.getTopscoring().then(postAPI, handleError);
+        },(message)=>{
+            this.sendPrivate(message, user);
+        });
+    }
+
 }
 
 
@@ -225,6 +282,9 @@ module.exports = {
         },
         'derpi': function(user, params, meta){
             this.API.derpibooru.handleDerpi.call(this, user, params, meta);
+        },
+        'topscoring': function(user, params, meta){
+            this.API.derpibooru.handleTopscoring.call(this, user, params, meta);
         },
     },
     cooldowns: {
