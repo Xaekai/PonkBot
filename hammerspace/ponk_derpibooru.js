@@ -21,6 +21,7 @@ class Derpibooru {
             embedLarge : '.picl',
             spoiler    : '.spl',
             maxPages   : 5,
+            heavyPop   : 20, // Restrict commands to registered users when the channel exceeds this many connected users
 
             useSpoiler  : true,
             useSmall    : true,
@@ -50,6 +51,13 @@ class Derpibooru {
     get recent(){
         this.expireRecent();
         return this.recentlySeen.map(seenData => seenData.imageID);
+    }
+
+    toggleSmall(){
+        this.useSmall = !this.useSmall;
+    }
+    toggleSpoiler(){
+        this.useSpoiler = !this.useSpoiler;
     }
 
     seen(imageID){
@@ -232,6 +240,7 @@ class Derpibooru {
         this.API.derpibooru.getTopscoring().then(postAPI, handleError);
     }
 
+
     handleCommand(user, params, meta){
         if (this.muted){
             return this.sendPrivate('[Derpibooru] The bot is currently muted.', user);
@@ -242,6 +251,9 @@ class Derpibooru {
         if (this.API.derpibooru.commandLock){
             return this.sendPrivate('[Derpibooru] Service command locked.', user);
         }
+        if(meta.rank < 1 && this.userlist.length > this.API.derpibooru.heavyPop){
+            return this.sendPrivate('[Derpibooru] Only registered users when channel is this populated.', user);
+        }
 
         this.checkCooldown({
             type: 'derpibooru', user, modBypass: meta.rank > 2
@@ -251,6 +263,7 @@ class Derpibooru {
                 case 'booru':      return this.API.derpibooru.handleBooru.call(this, user, params, meta);
                 case 'topscoring': return this.API.derpibooru.handleTopscoring.call(this, user, params, meta);
                 case 'derpi':      return this.API.derpibooru.handleDerpi.call(this, user, params, meta);
+                case 'derpset':    return this.API.derpibooru.handleDerpset.call(this, user, params, meta);
             }
 
         },(message)=>{
@@ -258,8 +271,25 @@ class Derpibooru {
         });
     }
 
-}
 
+    handleDerpset(user, params, meta){
+        if(meta.rank < 2){
+            return this.sendPrivate('[Derpibooru] Command restricted to moderators.', user);
+        }
+
+        if(params.match(/spoil/i)){
+            this.API.derpibooru.toggleSpoiler();
+            const state = this.API.derpibooru.useSpoiler && 'On' || 'Off';
+            return this.sendMessage(`[Derpibooru] { Spoiler Explicit: ${state} }`);
+        }
+
+        if(params.match(/usesmall/i)){
+            this.API.derpibooru.toggleSmall();
+            const state = this.API.derpibooru.useSmall && 'On' || 'Off';
+            return this.sendMessage(`[Derpibooru] { Always Small Embed: ${state} }`);
+        }
+    }
+}
 
 module.exports = {
     meta: {
@@ -278,6 +308,7 @@ module.exports = {
         'booru':      function(user, params, meta){ this.API.derpibooru.handleCommand.call(this, user, params, meta) },
         'derpi':      function(user, params, meta){ this.API.derpibooru.handleCommand.call(this, user, params, meta) },
         'topscoring': function(user, params, meta){ this.API.derpibooru.handleCommand.call(this, user, params, meta) },
+        'derpset':    function(user, params, meta){ this.API.derpibooru.handleCommand.call(this, user, params, meta) },
     },
     cooldowns: {
         derpibooru: {
