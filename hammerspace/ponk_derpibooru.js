@@ -58,25 +58,19 @@ class Derpibooru {
         // TODO Expire recentlySeen older than 30 minutes
     }
 
-    getImageDataByID(imageID){
+    getRequest(url){
         return new Promise((resolve, reject)=>{
-            const url = `https://${this.domain}/${imageID}.json?key=${this.key}`
             request(Object.assign({ url }, this.requestOpts), (error, response, body) => {
-                if(error){
+                if(error){ 
                     return reject(error);
                 }
-                if(response.statusCode !== 200){
+                if(response.statusCode !== 200){ 
                     return reject(response.statusCode === 400 ? 'Bad Request' : 'Unknown');
                 }
-
                 const result = JSON.parse(body);
 
                 if(result["error"]){ // { "status":"500", "error":"Internal Server Error" }
                     return reject(result["error"]);
-                }
-
-                if(result.duplicate_of){
-                    return resolve(this.getImageDataByID(result.duplicate_of));
                 }
 
                 return resolve(result);
@@ -84,29 +78,22 @@ class Derpibooru {
         });
     }
 
+    getImageDataByID(imageID){
+        return new Promise((resolve, reject)=>{
+            const url = `https://${this.domain}/${imageID}.json?key=${this.key}`
+            this.getRequest(url).then((result)=>{
+                if(result.duplicate_of){
+                    return resolve(this.getImageDataByID(result.duplicate_of));
+                }
+                return resolve(result);
+            },(error)=>{
+                return reject(error);
+            });
+        });
+    }
 
     // https://derpibooru.org/search.json?q=pinkie+pie
     search(queryText) {
-        const getRequest = (url) => {
-            return new Promise((resolve, reject)=>{
-                request(Object.assign({ url }, this.requestOpts), (error, response, body) => {
-                    if(error){ 
-                        return reject(error);
-                    }
-                    if(response.statusCode !== 200){ 
-                        return reject(response.statusCode === 400 ? 'Bad Request' : 'Unknown');
-                    }
-                    const result = JSON.parse(body);
-
-                    if(result["error"]){ // { "status":"500", "error":"Internal Server Error" }
-                        return reject(result["error"]);
-                    }
-
-                    return resolve(result);
-                });
-            });
-        }
-
         return new Promise((resolve, reject)=>{
             const query = encodeURIComponent(queryText.split(',').filter((e) => { return e.trim().length}).join(','));
             if(!query.length){
@@ -115,7 +102,7 @@ class Derpibooru {
 
             // first lets get how many results this is gonna get
             const queryTotal = `https://${this.domain}/search.json?key=${this.key}&q=${query}&perpage=1`
-            getRequest(queryTotal).then((result)=>{
+            this.getRequest(queryTotal).then((result)=>{
                 const results = result.total;
                 if(results === 0){
                     return reject('No results');
@@ -129,11 +116,15 @@ class Derpibooru {
                 while(pages--){
                     const page = pages+1;
                     const url = `https://${this.domain}/search.json?key=${this.key}&q=${query}&sf=score&sd=desc&page=${page}&perpage=50`
-                    queries.unshift(getRequest(url));
+                    queries.unshift(this.getRequest(url));
                 }
                 Promise.all(queries).then((searchResults)=>{
                     return resolve(searchResults.map(page => page.search).flat());
+                }, (error)=>{
+                    return reject(error);
                 });
+            },(error)=>{
+                return reject(error);
             });
         });
     }
