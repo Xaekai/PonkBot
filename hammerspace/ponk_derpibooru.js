@@ -31,7 +31,8 @@ class Derpibooru {
             cachedStaging     : { 'favorites': [], 'topscoring': [] },
             cachedReStaging   : { 'favorites': [], 'topscoring': [] },
             favesData         : { 'user': {} },
-            searchCache       : []
+            searchCache       : [],
+            recentlySeen      : [],
         });
     }
 
@@ -41,6 +42,20 @@ class Derpibooru {
             timeout : this.timeout,
             headers : { 'User-Agent': this.agent }
         }
+    }
+
+    get recent(){
+        this.expireRecent();
+        return this.recentlySeen.map(seenData => seenData.imageID);
+    }
+
+    seen(imageID){
+        if(this.recent.includes(imageID)){ return }
+        this.recentlySeen.push({ imageID, timestamp: Date.now() })
+    }
+
+    expireRecent(){
+        // TODO Expire recentlySeen older than 30 minutes
     }
 
     getImageDataByID(imageID){
@@ -171,7 +186,20 @@ class Derpibooru {
         }).then(()=>{
 
             const postAPI = (resultSet)=>{
-                const imageData = resultSet[Math.floor(Math.random() * resultSet.length)];
+                // Remove recently seen
+                let filteredSet = resultSet.filter(imageData => {
+                    return !this.API.derpibooru.recent.includes(imageData.id);
+                });
+                // Entire search has been recently seen
+                if(!filteredSet.length){
+                    filteredSet = resultSet;
+                }
+
+                // Select random image
+                const imageData = filteredSet[Math.floor(Math.random() * filteredSet.length)];
+                // Recently seen now
+                this.API.derpibooru.seen(imageData.id);
+                // Display it
                 this.sendMessage(`[Derpibooru] { Results: ${resultSet.length} }\n https://${imageData.representations.small}${this.API.derpibooru.embed}`);
             };
 
