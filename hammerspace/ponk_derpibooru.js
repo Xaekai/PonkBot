@@ -156,6 +156,27 @@ class Derpibooru {
         });
     }
 
+    embedCheck(imageData, clout){
+        const explicit = 26707;
+        const hasSound = 42470;
+        const isWebm = 122193;
+
+        var imageURL = !clout || this.useSmall ? imageData.representations.medium : imageData.representations.large;
+        var embed = !clout || this.useSmall ? this.embed : this.embedLarge ;
+
+        if(imageData.tag_ids.includes(isWebm)){
+            if(imageData.tag_ids.includes(hasSound)){
+                return "https:" + imageURL + ".vidm";
+            }
+            return "https:" + imageURL + ".vidalc";
+        }
+        if(this.useSpoiler && imageData.tag_ids.includes(explicit)){
+            return "https:" + imageURL + this.spoiler;
+        }
+        return "https:" + imageURL + embed;
+    }
+
+
     /*
         Command handlers are called in the context of the bot, not the class
         Use "this.API.derpibooru" to get to the class
@@ -171,7 +192,8 @@ class Derpibooru {
         }
 
         const postAPI = (imageData)=>{
-            this.sendMessage(`[Derpibooru]\n https://${imageData.representations.small}${this.API.derpibooru.embed}`);
+            const embed = this.API.derpibooru.embedCheck(imageData, meta.rank > 1);
+            this.sendMessage(`[Derpibooru]\n ${embed}`);
         };
 
         const handleError = (err)=>{
@@ -203,7 +225,9 @@ class Derpibooru {
             // Recently seen now
             this.API.derpibooru.seen(imageData.id);
             // Display it
-            this.sendMessage(`[Derpibooru] { Results: ${resultSet.length} }\n https://${imageData.representations.small}${this.API.derpibooru.embed}`);
+
+            const embed = this.API.derpibooru.embedCheck(imageData, meta.rank > 1);
+            this.sendMessage(`[Derpibooru] { Results: ${resultSet.length} }\n ${embed}`);
         };
 
         const handleError = (err)=>{
@@ -230,7 +254,8 @@ class Derpibooru {
             // Recently seen now
             this.API.derpibooru.seen(imageData.id);
             // Display it
-            this.sendMessage(`[Derpibooru] { Results: ${resultSet.length} }\n https://${imageData.representations.small}${this.API.derpibooru.embed}`);
+            const embed = this.API.derpibooru.embedCheck(imageData, meta.rank > 1);
+            this.sendMessage(`[Derpibooru] { Results: ${resultSet.length} }\n ${embed}`);
         };
 
         const handleError = (err)=>{
@@ -289,7 +314,9 @@ class Derpibooru {
             return this.sendMessage(`[Derpibooru] { Always Small Embed: ${state} }`);
         }
     }
+
 }
+
 
 module.exports = {
     meta: {
