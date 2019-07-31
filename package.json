@@ -3,6 +3,9 @@
   "version": "0.6.10",
   "description": "A chatbot for CyTube",
   "main": "service.js",
+  "engines": { 
+    "node": ">=11.0.0"
+  },
   "scripts": {
     "test": "echo \"Notice: Tests coming soon.\" && exit 0"
   },
