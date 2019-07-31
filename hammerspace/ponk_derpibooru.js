@@ -153,8 +153,8 @@ class Derpibooru {
         Use "this.API.derpibooru" to get to the class
     */
     handleBooru(user, params, meta){
-        if (this.muted || !this.API.derpibooru || !params){
-            return
+        if (!params){
+            return this.sendPrivate('[Derpibooru] { Error: Invalid Command Syntax }', username);
         }
 
         const imageID = params.trim().match(/^\d+/)
@@ -162,99 +162,97 @@ class Derpibooru {
             return this.sendPrivate('[Derpibooru] { Error: Invalid Command Syntax }', username);
         }
 
-        this.checkCooldown({
-            type: 'derpibooru', user, modBypass: this.getUserRank(user) > 2
-        }).then(()=>{
+        const postAPI = (imageData)=>{
+            this.sendMessage(`[Derpibooru]\n https://${imageData.representations.small}${this.API.derpibooru.embed}`);
+        };
 
-            const postAPI = (imageData)=>{
-                this.sendMessage(`[Derpibooru]\n https://${imageData.representations.small}${this.API.derpibooru.embed}`);
-            };
+        const handleError = (err)=>{
+            this.sendMessage(`[Derpibooru] Something went wrong. ${err}`);
+        }
 
-            const handleError = (err)=>{
-                this.sendMessage(`[Derpibooru] Something went wrong. ${err}`);
-            }
-
-            this.API.derpibooru.getImageDataByID(imageID).then(postAPI, handleError);
-        },(message)=>{
-            this.sendPrivate(message, user);
-        });
+        this.API.derpibooru.getImageDataByID(imageID).then(postAPI, handleError);
     }
 
 
     handleDerpi(user, params, meta){
-        if (this.muted || !this.API.derpibooru || !params){
-            return
-        }
-
         const query = params.trim();
         if(!query){
             return this.sendPrivate('[Derpibooru] { Error: Invalid Command Syntax }', username);
         }
 
-        this.checkCooldown({
-            type: 'derpibooru', user, modBypass: this.getUserRank(user) > 2
-        }).then(()=>{
-
-            const postAPI = (resultSet)=>{
-                // Remove recently seen
-                let filteredSet = resultSet.filter(imageData => {
-                    return !this.API.derpibooru.recent.includes(imageData.id);
-                });
-                // Entire search has been recently seen
-                if(!filteredSet.length){
-                    filteredSet = resultSet;
-                }
-
-                // Select random image
-                const imageData = filteredSet[Math.floor(Math.random() * filteredSet.length)];
-                // Recently seen now
-                this.API.derpibooru.seen(imageData.id);
-                // Display it
-                this.sendMessage(`[Derpibooru] { Results: ${resultSet.length} }\n https://${imageData.representations.small}${this.API.derpibooru.embed}`);
-            };
-
-            const handleError = (err)=>{
-                this.sendMessage(`[Derpibooru] Something went wrong. ${err}`);
+        const postAPI = (resultSet)=>{
+            // Remove recently seen
+            let filteredSet = resultSet.filter(imageData => {
+                return !this.API.derpibooru.recent.includes(imageData.id);
+            });
+            // Entire search has been recently seen
+            if(!filteredSet.length){
+                filteredSet = resultSet;
             }
 
-            this.API.derpibooru.search(query).then(postAPI, handleError);
-        },(message)=>{
-            this.sendPrivate(message, user);
-        });
+            // Select random image
+            const imageData = filteredSet[Math.floor(Math.random() * filteredSet.length)];
+            // Recently seen now
+            this.API.derpibooru.seen(imageData.id);
+            // Display it
+            this.sendMessage(`[Derpibooru] { Results: ${resultSet.length} }\n https://${imageData.representations.small}${this.API.derpibooru.embed}`);
+        };
+
+        const handleError = (err)=>{
+            this.sendMessage(`[Derpibooru] Something went wrong. ${err}`);
+        }
+
+        this.API.derpibooru.search(query).then(postAPI, handleError);
     }
 
 
     handleTopscoring(user, params, meta){
-        if (this.muted || !this.API.derpibooru){
-            return
+        const postAPI = (resultSet)=>{
+            // Remove recently seen
+            let filteredSet = resultSet.filter(imageData => {
+                return !this.API.derpibooru.recent.includes(imageData.id);
+            });
+            // Entire search has been recently seen
+            if(!filteredSet.length){
+                filteredSet = resultSet;
+            }
+
+            // Select random image
+            const imageData = filteredSet[Math.floor(Math.random() * filteredSet.length)];
+            // Recently seen now
+            this.API.derpibooru.seen(imageData.id);
+            // Display it
+            this.sendMessage(`[Derpibooru] { Results: ${resultSet.length} }\n https://${imageData.representations.small}${this.API.derpibooru.embed}`);
+        };
+
+        const handleError = (err)=>{
+            this.sendMessage(`[Derpibooru] Something went wrong. ${err}`);
+        }
+
+        this.API.derpibooru.getTopscoring().then(postAPI, handleError);
+    }
+
+    handleCommand(user, params, meta){
+        if (this.muted){
+            return this.sendPrivate('[Derpibooru] The bot is currently muted.', user);
+        }
+        if (!this.API.derpibooru){
+            return this.sendPrivate('[Derpibooru] The bot lacks an API key for this service.', user);
+        }
+        if (this.API.derpibooru.commandLock){
+            return this.sendPrivate('[Derpibooru] Service command locked.', user);
         }
 
         this.checkCooldown({
-            type: 'derpibooru', user, modBypass: this.getUserRank(user) > 2
+            type: 'derpibooru', user, modBypass: meta.rank > 2
         }).then(()=>{
-            const postAPI = (resultSet)=>{
-                // Remove recently seen
-                let filteredSet = resultSet.filter(imageData => {
-                    return !this.API.derpibooru.recent.includes(imageData.id);
-                });
-                // Entire search has been recently seen
-                if(!filteredSet.length){
-                    filteredSet = resultSet;
-                }
 
-                // Select random image
-                const imageData = filteredSet[Math.floor(Math.random() * filteredSet.length)];
-                // Recently seen now
-                this.API.derpibooru.seen(imageData.id);
-                // Display it
-                this.sendMessage(`[Derpibooru] { Results: ${resultSet.length} }\n https://${imageData.representations.small}${this.API.derpibooru.embed}`);
-            };
-
-            const handleError = (err)=>{
-                this.sendMessage(`[Derpibooru] Something went wrong. ${err}`);
+            switch(meta.command){
+                case 'booru':      return this.API.derpibooru.handleBooru.call(this, user, params, meta);
+                case 'topscoring': return this.API.derpibooru.handleTopscoring.call(this, user, params, meta);
+                case 'derpi':      return this.API.derpibooru.handleDerpi.call(this, user, params, meta);
             }
 
-            this.API.derpibooru.getTopscoring().then(postAPI, handleError);
         },(message)=>{
             this.sendPrivate(message, user);
         });
@@ -277,15 +275,9 @@ module.exports = {
         });
     },
     handlers: {
-        'booru': function(user, params, meta){
-            this.API.derpibooru.handleBooru.call(this, user, params, meta);
-        },
-        'derpi': function(user, params, meta){
-            this.API.derpibooru.handleDerpi.call(this, user, params, meta);
-        },
-        'topscoring': function(user, params, meta){
-            this.API.derpibooru.handleTopscoring.call(this, user, params, meta);
-        },
+        'booru':      function(user, params, meta){ this.API.derpibooru.handleCommand.call(this, user, params, meta) },
+        'derpi':      function(user, params, meta){ this.API.derpibooru.handleCommand.call(this, user, params, meta) },
+        'topscoring': function(user, params, meta){ this.API.derpibooru.handleCommand.call(this, user, params, meta) },
     },
     cooldowns: {
         derpibooru: {
