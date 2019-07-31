@@ -21,6 +21,7 @@ Work in progress. Currently beta state.
 * [Merriam-Webster](https://dictionaryapi.com/)
 * [WolframAlpha](https://products.wolframalpha.com/api/faqs.html)
 * [Cleverbot](https://www.cleverbot.com/api/)
+* [OpenWeather](https://openweathermap.org/api)
 * Giphy
 * Derpibooru
 * e621

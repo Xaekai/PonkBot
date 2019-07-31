@@ -16,7 +16,7 @@ function getConfig(args){
     config = typeof args.config == "string" ? args.config : config;
 
     // Check for relative path without leading "./"
-    if( !config.match(/^\//) && config.match(/\//)){
+    if(!config.match(/^\//) && config.match(/\//)){
         config = `./${config}`;
     }
 
