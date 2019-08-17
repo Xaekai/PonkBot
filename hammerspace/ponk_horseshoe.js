@@ -79,9 +79,13 @@ module.exports = {
             this.checkCooldown({
                 type: 'rng', user, modBypass: rank > 2
             }).then(()=>{
-
                 const choices = this.userlist.map(user => user.name);
                 let choice = choices[Math.floor(Math.random() * choices.length)];
+
+                if(params.trim()){
+                    return this.sendMessage(`[Random User] ${choice} ${params.trim()}`);
+                }
+
                 if(user == choice){ choice = 'themself'; };
                 this.sendMessage(`[Random User] ${user} chooses ${choice}.`);
 
