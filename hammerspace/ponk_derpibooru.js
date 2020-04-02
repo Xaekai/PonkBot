@@ -91,7 +91,7 @@ class Derpibooru {
 
     getImageDataByID(imageID){
         return new Promise((resolve, reject)=>{
-            const url = `https://${this.domain}/${imageID}.json?key=${this.key}`
+            const url = `https://${this.domain}/api/v1/json/images/${imageID}?key=${this.key}`
             this.getRequest(url).then((result)=>{
                 if(result.duplicate_of){
                     return resolve(this.getImageDataByID(result.duplicate_of));
@@ -103,7 +103,7 @@ class Derpibooru {
         });
     }
 
-    // https://derpibooru.org/search.json?q=pinkie+pie
+    // https://derpibooru.org/api/v1/json/search/images?q=pinkie+pie
     search(queryText) {
         return new Promise((resolve, reject)=>{
             const query = encodeURIComponent(queryText.split(',').filter((e) => { return e.trim().length}).join(','));
@@ -112,7 +112,7 @@ class Derpibooru {
             }
 
             // Let us determine how many results this is going to get.
-            const queryTotal = `https://${this.domain}/search.json?key=${this.key}&q=${query}&perpage=1`
+            const queryTotal = `https://${this.domain}/api/v1/json/search/images?key=${this.key}&q=${query}&per_page=1`
             this.getRequest(queryTotal).then((result)=>{
                 const results = result.total;
                 if(results === 0){
@@ -125,11 +125,11 @@ class Derpibooru {
                 const queries = [];
                 while(pages--){
                     const page = pages+1;
-                    const url = `https://${this.domain}/search.json?key=${this.key}&q=${query}&sf=score&sd=desc&page=${page}&perpage=50`
+                    const url = `https://${this.domain}/api/v1/json/search/images?key=${this.key}&q=${query}&sf=score&sd=desc&page=${page}&per_page=50`
                     queries.unshift(this.getRequest(url));
                 }
                 Promise.all(queries).then((searchResults)=>{
-                    return resolve(searchResults.map(page => page.search).flat());
+                    return resolve(searchResults.map(page => page.images).flat());
                 }, (error)=>{
                     return reject(error);
                 });
@@ -192,7 +192,7 @@ class Derpibooru {
         }
 
         const postAPI = (imageData)=>{
-            const embed = this.API.derpibooru.embedCheck(imageData, meta.rank > 1);
+            const embed = this.API.derpibooru.embedCheck(imageData.image, meta.rank > 1);
             this.sendMessage(`[Derpibooru]\n ${embed}`);
         };
 
