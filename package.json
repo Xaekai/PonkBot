@@ -37,7 +37,7 @@
     "google-translate-api": "vitalets/google-translate-api",
     "jstransformer-marked": "latest",
     "knex":                 "latest",
-    "limiter":              "latest",
+    "limiter":              "1.1.5",
     "minimist":             "latest",
     "passport":             "latest",
     "passport-local":       "latest",
